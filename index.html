@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>تمارين أبو علي</title>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/style.css?v=10">
+
+  <!-- مكتبة قراءة الإكسل -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+  
+</head>
+<body>
+
+  <!-- Floating Background Elements -->
+  <div class="blob shape1"></div>
+  <div class="blob shape2"></div>
+  <div class="blob shape3"></div>
+
+  <header>
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 1rem; max-width: 1200px; margin: 0 auto;">
+      <div>
+        <button id="profileBtn" style="background: var(--glass-bg); border: 1px solid var(--glass-border); color: white; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; margin-left: 0.5rem;">
+          <i class="fa-solid fa-user"></i>
+        </button>
+        <button id="chatBtn" style="background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--success-color); width: 45px; height: 45px; border-radius: 50%; cursor: pointer; margin-left: 0.5rem;">
+          <i class="fa-solid fa-robot"></i>
+        </button>
+      </div>
+      <h1 style="margin: 0; font-size: 1.8rem;">تــمــــاريــن ابــــو عــــلــــي</h1>
+      <button id="homeBtn" style="background: var(--glass-bg); border: 1px solid var(--glass-border); color: white; width: 45px; height: 45px; border-radius: 50%; cursor: pointer;">
+        <i class="fa-solid fa-house"></i>
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+    
+    <!-- View 1: Home Dashboard -->
+    <section id="home-view" class="view-section active card">
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <h2 style="font-size: 1.8rem; color: var(--primary-color);">يــوم جــديــد.. هــدف جــديــد 🔥</h2>
+        <p style="color: var(--text-muted); margin-top: 0.5rem;">جـدولـك مـصـمـم لـتـحـريـق الـدهـون و نـحـت الـجـسـم</p>
+      </div>
+
+      <div class="dashboard-grid">
+        <div class="stat-card">
+          <i class="fa-solid fa-calendar-alt"></i>
+          <p>الـيـوم</p>
+          <div class="value" id="todayNameSpan">-</div>
+        </div>
+        <div class="stat-card">
+          <i class="fa-solid fa-list-check"></i>
+          <p>الـتـمـاريـن</p>
+          <div class="value" id="todayExCount">0</div>
+        </div>
+        <div class="stat-card">
+          <i class="fa-solid fa-fire"></i>
+          <p>الـهـدف</p>
+          <div class="value" style="color: #ef4444;">تـنـشـيـف</div>
+        </div>
+      </div>
+
+      <button id="startWorkoutBtn" class="btn" style="margin-bottom: 1rem;">
+        <i class="fa-solid fa-bolt"></i> ابــدأ الــتــديــب الآن
+      </button>
+
+      <button id="goToEditBtn" class="btn" style="background: rgba(255,255,255,0.1); box-shadow: none; border: 1px solid var(--glass-border); margin-bottom: 1rem;">
+        <i class="fa-solid fa-pen-to-square"></i> تـعـديـل / إضـافـة تـمـاريـن
+      </button>
+
+      <div style="text-align: center;">
+        <input type="file" id="excelUpload" accept=".xlsx, .xls" style="display: none;" />
+        <button id="uploadExcelBtn" style="background: none; border: none; color: var(--success-color); cursor: pointer; font-size: 0.9rem;">
+          <i class="fa-solid fa-file-excel"></i> رفـع مـلـف إكـسـل جـديـد
+        </button>
+      </div>
+    </section>
+
+    <!-- View 2: Edit Workout -->
+    <section id="edit-view" class="view-section card">
+      <h2 style="margin-bottom: 1rem; text-align: center;">تـخـصـيـص الـتـمـاريـن</h2>
+      
+      <div style="margin-bottom: 1.5rem;">
+        <label style="display: block; margin-bottom: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">اخـتـر الـيـوم لـلـتـعـديـل:</label>
+        <select id="editDaySelector" class="btn" style="background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border);">
+          <option value="الأحد">الأحد</option>
+          <option value="الإثنين">الإثنين</option>
+          <option value="الثلاثاء">الثلاثاء</option>
+          <option value="الأربعاء">الأربعاء</option>
+          <option value="الخميس">الخميس</option>
+          <option value="الجمعة">الجمعة</option>
+          <option value="السبت">السبت</option>
+        </select>
+      </div>
+
+      <div id="editList" class="edit-list">
+        <!-- Items added by JS -->
+      </div>
+      <button id="addExerciseBtn" class="btn add-btn">
+        <i class="fa-solid fa-plus"></i> إضـافـة تـمـرين جـديـد
+      </button>
+      <button id="saveEditBtn" class="btn">
+        <i class="fa-solid fa-check"></i> حـفـظ الـتـغـيـيـرات
+      </button>
+    </section>
+
+    <!-- View Profile -->
+    <section id="profile-view" class="view-section card">
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <div style="width: 100px; height: 100px; background: var(--primary-color); border-radius: 50%; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; font-size: 3rem;">
+           <i class="fa-solid fa-user-tie"></i>
+        </div>
+        <h2>مـلـفـي الـصـحـي</h2>
+      </div>
+
+      <div class="edit-item" style="margin-bottom: 1.5rem;">
+        <label>الـتـقـدم (الـوزن الـحـالـي):</label>
+        <input type="number" id="userWeight" value="85">
+        
+        <label style="margin-top: 1rem; display: block;">الـوزن الـمـسـتـهـدف:</label>
+        <input type="number" id="targetWeight" value="75">
+        
+        <label style="margin-top: 1rem; display: block;">الـنـسـبـة الـمـئـويـة لـتـحـقـيـق الـهـدف:</label>
+        <div class="progress-container" style="margin-top: 0.5rem;">
+           <div id="weightProgressBar" class="progress-bar" style="width: 40%; background: var(--success-color);"></div>
+        </div>
+      </div>
+
+      <button id="saveProfileBtn" class="btn">حـفـظ بـيـانـاتـي</button>
+      
+      <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--glass-border);">
+         <h4 style="color: #ef4444; margin-bottom: 1rem;"><i class="fa-solid fa-triangle-exclamation"></i> منطقة الخطر</h4>
+         <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">هذا الزر يحذف جميع التعديلات التي قمت بها على الجداول ويستعيد الجداول الأساسية للموقع.</p>
+         <button id="resetAppBtn" class="btn" style="background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #ef4444; font-size: 0.9rem;">
+            <i class="fa-solid fa-trash-can"></i> حـذف جـمـيـع الـتـعـديـلات والـبـدء مـن جـديـد
+         </button>
+      </div>
+
+    </section>
+
+    <!-- View 3: Active Workout -->
+    <section id="workout-view" class="view-section card">
+      <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+
+      <div class="quote-container" id="motivationalQuote">"انـت بـطـل.. اسـتـمـر!"</div>
+
+      <div class="exercise-header">
+        <div class="exercise-number" id="exerciseNumber">-</div>
+        
+        <div class="exercise-img-wrapper">
+          <img id="exerciseImage" src="" alt="تمرين" class="exercise-img">
+        </div>
+        
+        <h2 class="exercise-title" id="exerciseTitle">-</h2>
+      </div>
+
+      <div id="timerContainer" style="display: none; text-align: center; background: rgba(0,0,0,0.3); border-radius: 15px; padding: 1rem; margin-bottom: 2rem;">
+        <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">الـوقـت الـمـتـبـقـي</div>
+        <div class="timer-display" id="timerDisplay" style="margin:0;">00:00</div>
+        <div class="timer-controls" style="margin-top: 1rem; margin-bottom: 0;">
+          <button id="startTimerBtn" class="timer-btn" style="background: var(--primary-color);"><i class="fa-solid fa-play"></i></button>
+          <button id="resetTimerBtn" class="timer-btn"><i class="fa-solid fa-rotate-left"></i></button>
+        </div>
+      </div>
+
+      <div class="exercise-details">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+           <h4 style="margin: 0;"><i class="fa-solid fa-bullseye"></i> مـطـلـوب:</h4>
+           <span id="exerciseReps" style="font-weight: 800; color: var(--primary-color); font-size: 1.2rem;">-</span>
+        </div>
+        <p id="exerciseDesc" style="font-size: 0.95rem; line-height: 1.6; opacity: 0.9;">-</p>
+        
+        <div id="aiAnalysisBox" class="ai-analysis-box" style="display: none;">
+          <i class="fa-solid fa-spinner fa-spin"></i> جـاري تـحـلـيـل الـتـمـريـن...
+        </div>
+      </div>
+
+      <button id="nextExerciseBtn" class="btn next-btn">
+        الـتـمـريـن الـتـالـي <i class="fa-solid fa-chevron-left"></i>
+      </button>
+    </section>
+
+    <!-- View 4: Complete -->
+    <section id="finished-view" class="view-section card" style="text-align: center;">
+      <i class="fa-solid fa-trophy success-icon" style="color: gold;"></i>
+      <h2 style="font-size: 2rem; margin-bottom: 1rem;">كـفـيـت و وفـيـت!</h2>
+      <p style="margin-bottom: 1rem;">تـم إنـهـاء جـدول الـيـوم بـنـجـاح.. اسـتـمـر يـا بـطـل</p>
+      
+      <div class="weight-loss-card">
+        <h3 style="margin-bottom: 0.5rem; color: #fff;"><i class="fa-solid fa-fire-flame-curved" style="color: #ef4444;"></i> الـحـرق الـمـتـوقـع</h2>
+        <p id="calorieEstimation" style="font-size: 1.1rem; font-weight: bold; margin-bottom: 0.5rem;">جـاري الـحـسـاب...</p>
+        <p id="weightLossEstimation" style="font-size: 0.9rem; color: #10b981;">بـهـذا الـمـعـدل سـتـخـسـر x كـغ هـذا الـشـهـر!</p>
+      </div>
+
+      <div style="margin-bottom: 2rem; max-height: 200px; overflow-y: auto;">
+        <table class="summary-table">
+          <thead>
+            <tr>
+              <th>الـتـمـريـن</th>
+              <th>الـتـكـرار / الـوقـت</th>
+            </tr>
+          </thead>
+          <tbody id="summaryTableBody">
+            <!-- Populated by JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <button id="finishBtn" class="btn">الـعـودة للرئيسية</button>
+    </section>
+
+    <!-- View 5: Chat -->
+    <section id="chat-view" class="view-section card" style="padding: 0;">
+      <div style="padding: 1.5rem; text-align: center; border-bottom: 1px solid var(--glass-border); background: rgba(0,0,0,0.3);">
+        <h2 style="margin: 0; font-size: 1.5rem;"><i class="fa-solid fa-robot"></i> الـذكـاء الاصـطـنـاعـي الـمـحـفـز</h2>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">أسـألـنـي عـن الـتـمـاريـن أو طـلـب تـحـفـيـز!</p>
+      </div>
+      <div class="chat-container" style="border: none; border-radius: 0; height: 50vh;">
+        <div id="chatMessages" class="chat-messages">
+          <div class="message ai">أهـلاً يـا بـطـل! أنـا مـسـاعـدك الـشـخـصـي، كـيـف أقـدر أسـاعـدك الـيـوم وفـي أي تـمـريـن تـبـيـنـي أحـفـزك؟ 💪</div>
+        </div>
+        <div class="chat-input-area">
+          <input type="text" id="chatInput" placeholder="اكـتـب رسـالـتـك هـنـا..." onkeypress="if(event.key === 'Enter') sendChatMessage()">
+          <button onclick="sendChatMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+        <button id="aiGenerateWorkoutBtn" style="background: var(--success-color);"><i class="fa-solid fa-wand-magic-sparkles"></i></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Audio for timer -->
+    <audio id="timerAudio" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3"></audio>
+  </main>
+
+  <script src="js/data.js?v=10"></script>
+  <script src="js/app.js?v=10"></script>
+</body>
+</html>

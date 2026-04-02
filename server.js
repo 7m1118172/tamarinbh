@@ -5,10 +5,11 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // السماح للمتصفح بقراءة كل الملفات (كالصور، وملفات الستايل والجافاسكريبت)
-app.use(express.static(__dirname));
+app.use(express.static(path.join(__dirname)));
 
 // عند الدخول لأي مسار في الموقع، قم بإرجاع الصفحة الرئيسية (مهم جداً لتطبيقات الصفحة الواحدة)
-app.get('*', (req, res) => {
+// نتأكد أننا لا نرجع الصفحة الرئيسية لطلبات الملفات المفقودة (مثل .css أو .js)
+app.get(/^(?!\/css|\/js|\/assets|\/TheYearofHandicrafts).*/, (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
